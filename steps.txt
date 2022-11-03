@@ -1,0 +1,8 @@
+1.  tokens are the terminals
+2.  in lex, the values have to returned.
+
+questions - 
+1.  wouldn't there be a single .y file? then why do I have to define
+    the tokens first and then write the bison specification?
+2.  when yacc does syntax analysis, it does things in interactive mode.
+    what modifications need to be made in lex such that it works?
