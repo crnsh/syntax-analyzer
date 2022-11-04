@@ -140,13 +140,13 @@ logical_AND_expression: equality_expression
 logical_OR_expression: logical_AND_expression
                      | logical_OR_expression LOGICAL_OR logical_AND_expression
                      ;
-conditional_expression: logical_OR_expression
+conditional_expression: logical_OR_expression '?' expression ':' logical_AND_expression
                       | logical_OR_expression '?' expression ':' conditional_expression
                       ;
-assignment_expression: conditional_expression
+assignment_expression: conditional_expression ';'
                      | unary_expression '=' assignment_expression // unary_expression must have lvalue
                      ;
-expression: assignment_expression
+expression: assignment_expression ';'
           ;
 declaration: type_specifier init_declarator ';'
            ; // Only one element in a declaration
@@ -174,7 +174,7 @@ parameter_list: parameter_declaration
               | parameter_list ',' parameter_declaration
               ;
 parameter_declaration: type_specifier pointer_opt identifier_opt
-identifier_opt: IDENTIFIER
+identifier_opt: IDENTIFIER ';'
               | 
               ;
 initializer: assignment_expression
@@ -196,7 +196,7 @@ block_item: declaration // Block scope _ declarations followed by statements
           ;
 expression_statement: expression_opt ';'
                     ;
-expression_opt: expression
+expression_opt: expression ';'
               | 
               ;
 selection_statement: KEYWD_IF '(' expression ')' statement
@@ -214,11 +214,11 @@ external_declaration: function_definition // Single source file containing main'
                     ;
 function_definition: type_specifier declarator declaration_list_opt compound_statement
                    ;
-declaration_list_opt: declaration_list
+declaration_list_opt: declaration_list ';'
                     | 
                     ;
 declaration_list: declaration
-                | declaration_list declaration 
+                | declaration_list declaration ';'
                 ;
 constant: INTEGER_CONSTANT
         | CONSTANT
