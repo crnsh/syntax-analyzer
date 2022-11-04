@@ -25,13 +25,13 @@ void yyerror(char *s);
 %token NOT_EQUALITY
 %token LOGICAL_AND
 %token LOGICAL_OR
-%token UNARYOPERATOR
 
 %type primary_expression
 %type postfix_expression
 %type argument_expression_list_opt
 %type argument_expression_list
 %type unary_expression
+%type unary_operator
 %type multiplicative_expression
 %type additive_expression
 %type relational_expression
@@ -70,7 +70,6 @@ void yyerror(char *s);
 
 %start translation_unit
 
-%nonassoc UNARYOPERATOR
 %left '*'
 %left '/'
 %left '%'
@@ -108,8 +107,14 @@ argument_expression_list: assignment_expression
                         | argument_expression_list ',' assignment_expression
                         ;
 unary_expression: postfix_expression
-                | UNARYOPERATOR unary_expression // Expr. with prefix ops. Right assoc. in C; non_assoc. here
+                | unary_operator unary_expression // Expr. with prefix ops. Right assoc. in C; non_assoc. here
                 ;                                    // Only a single prefix op is allowed in an expression here
+unary_operator: '&'
+              | '-'
+              | '*'
+              | '+'
+              | '!'
+              ;
 multiplicative_expression: unary_expression
                          | multiplicative_expression '*' unary_expression
                          | multiplicative_expression '/' unary_expression
@@ -201,10 +206,13 @@ iteration_statement: KEYWD_FOR '(' expression_opt ';' expression_opt ';' express
                    ;
 jump_statement: KEYWD_RETURN expression_opt ';'
               ;
-translation_unit: function_definition // Single source file containing main'('')'
-                | declaration
+translation_unit: external_declaration
+                | translation_unit external_declaration
                 ;
-function_definition: type_specifier declarator '(' declaration_list_opt ')' compound_statement
+external_declaration: function_definition // Single source file containing main'('')'
+                    | declaration
+                    ;
+function_definition: type_specifier declarator declaration_list_opt compound_statement
                    ;
 declaration_list_opt: declaration_list
                     | 
