@@ -23,7 +23,6 @@ VOID "void"
 ILLEGALZERO [0]+[1-9]*
 ILLEGALID [0-9]+[a-zA-Z]+[0-9]*
 HEADER [a-zA-Z]+[0-9]*[.][h]
-HASH [#]
 PUNCTUATOR [;|,|(|)|\[|\]|{|}|+|\-|*|/|<|>|=|\\|\&|\:|?|%]|"<="|">="|"!="|"=="|"#"|"&&"|"||"|"-"
 INTEGERS [+|-]?[1-9]+[0-9]*
 ZERO [0]
@@ -69,7 +68,6 @@ SEMICOLON [;]
 {RETURN} {return (KEYWD_RETURN);}
 {VOID} {return (KEYWD_VOID);}
 
-{HASH} {return *yytext;}
 {PUNCTUATOR} {return *yytext;}
 {STRINGLITERAL} {return (STRINGLITERAL);}
 {IDENTIFIER} {return (IDENTIFIER);}
