@@ -25,6 +25,70 @@ void yyerror(char *s);
 %token NOT_EQUALITY
 %token LOGICAL_AND
 %token LOGICAL_OR
+%token UNARYOPERATOR
+
+%type primary_expression
+%type postfix_expression
+%type argument_expression_list_opt
+%type argument_expression_list
+%type unary_expression
+%type multiplicative_expression
+%type additive_expression
+%type relational_expression
+%type equality_expression
+%type logical_AND_expression
+%type logical_OR_expression
+%type conditional_expression
+%type assignment_expression
+%type expression
+%type declaration
+%type init_declarator
+%type type_specifier
+%type declarator
+%type direct_declarator
+%type pointer_opt
+%type pointer
+%type parameter_list
+%type parameter_declaration
+%type identifier_opt
+%type initializer
+%type statement
+%type compound_statement
+%type block_item_list_opt
+%type block_item_list
+%type block_item
+%type expression_statement
+%type expression_opt
+%type selection_statement
+%type iteration_statement
+%type jump_statement
+%type translation_unit
+%type function_definition
+%type declaration_list_opt
+%type declaration_list
+%type constant
+
+%start translation_unit
+
+%nonassoc UNARYOPERATOR
+%left '*'
+%left '/'
+%left '%'
+
+%left '+'
+%left '-'
+
+%left '<'
+%left '>'
+%left LESS_THAN_EQUAL
+%left GREATER_THAN_EQUAL
+%left EQUALITY
+%left NOT_EQUALITY
+%left LOGICAL_AND
+%left LOGICAL_OR
+%right '?'
+%right ':'
+%right '='
 
 %%
 primary_expression: IDENTIFIER
@@ -41,17 +105,11 @@ argument_expression_list_opt: argument_expression_list
                             | 
                             ;
 argument_expression_list: assignment_expression
-                  |  argument_expression_list ',' assignment_expression
-                  ;
+                        | argument_expression_list ',' assignment_expression
+                        ;
 unary_expression: postfix_expression
-                |  unary_operator unary_expression // Expr. with prefix ops. Right assoc. in C; non_assoc. here
+                | UNARYOPERATOR unary_expression // Expr. with prefix ops. Right assoc. in C; non_assoc. here
                 ;                                    // Only a single prefix op is allowed in an expression here
-unary_operator: '&'
-              | '*'
-              | '+'
-              | '-'
-              | '!'
-              ;
 multiplicative_expression: unary_expression
                          | multiplicative_expression '*' unary_expression
                          | multiplicative_expression '/' unary_expression
@@ -85,7 +143,7 @@ assignment_expression: conditional_expression
                      ;
 expression: assignment_expression
           ;
-declaration: type_specifier init_declarator 
+declaration: type_specifier init_declarator ';'
            ; // Only one element in a declaration
 init_declarator: declarator // Simple identifier',' 1-D array or function declaration
                | declarator '=' initializer // Simple id with init. initializer for array / fn/ is semantically skipped
@@ -99,7 +157,7 @@ declarator: pointer_opt direct_declarator // Optional injection of pointer
           ;
 direct_declarator:
                  | IDENTIFIER // Simple identifier
-                 | IDENTIFIER '[' INTEGER_CONSTANT ']' // 1-D array of a built-in type or ptr to it. Only +ve constant
+                 | IDENTIFIER '[' constant ']'// 1-D array of a built-in type or ptr to it. Only +ve constant
                  | IDENTIFIER '(' parameter_list ')' // Fn. header with params of built-in type or ptr to them
                  ;
 pointer_opt: pointer
@@ -164,5 +222,8 @@ void yyerror(char *s) {
     std::cout << s << std::endl;
 }
 int main() {
+    #ifdef YYDEBUG
+        yydebug=1;
+    #endif
     yyparse();
 }

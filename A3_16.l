@@ -29,6 +29,7 @@ ZERO [0]
 STRINGLITERAL "[a-zA-Z0-9]*\0"
 CHARCONSTANT [']([a-zA-Z]|[0-9]|[!@#$%^&*()_+{}|:"<>?`~\[\]\\-])[']
 IDENTIFIER [a-zA-Z]+[a-zA-Z0-9|_]*
+UNARYOPERATOR [-&+*!]
 
 WS [\t\r]|" "
 LINE [\n]
@@ -67,6 +68,7 @@ SEMICOLON [;]
 "<=" {return (LESS_THAN_EQUAL);}
 ">=" {return (GREATER_THAN_EQUAL);}
 "->" {return (ARRW_PNTR);}
+{UNARYOPERATOR} {return (UNARYOPERATOR);}
 {INT} {return (KEYWD_INT);}      
 {CHAR} {return (KEYWD_CHAR);}
 {ELSE} {return (KEYWD_ELSE);}
@@ -78,10 +80,10 @@ SEMICOLON [;]
 {STRINGLITERAL} {return (STRINGLITERAL);}
 {INTEGERS} {return (INTEGER_CONSTANT);}
 {IDENTIFIER} {return (IDENTIFIER);}
-{CHARCONSTANT} {printf("<CONSTANT, \"%s\"> ", yytext);}
+{CHARCONSTANT} {return *yytext;}
 
-{SEMICOLON} {printf("<PUNCTUATOR, \"%s\"> ", yytext);}
-{PUNCTUATOR} {printf("<PUNCTUATOR, \"%s\"> ", yytext);}
+{SEMICOLON} {return *yytext;}
+{PUNCTUATOR} {return *yytext;}
 {WS}+    {}
 .       { printf(" lexical error in Line : %d \n ", line_num); exit(1); }
 %%
