@@ -229,9 +229,3 @@ constant: INTEGER_CONSTANT
 void yyerror(char *s) {
     std::cout << s << std::endl;
 }
-int main() {
-    #ifdef YYDEBUG
-        yydebug=1;
-    #endif
-    yyparse();
-}

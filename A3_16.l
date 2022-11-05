@@ -24,7 +24,7 @@ ILLEGALZERO [0]+[1-9]*
 ILLEGALID [0-9]+[a-zA-Z]+[0-9]*
 HEADER [a-zA-Z]+[0-9]*[.][h]
 PUNCTUATOR [;|,|(|)|\[|\]|{|}|+|\-|*|/|<|>|=|\\|\&|\:|?|%]|"<="|">="|"!="|"=="|"#"|"&&"|"||"|"-"
-INTEGERS [+|-]?[1-9]+[0-9]*
+INTEGERS [1-9]+[0-9]*
 ZERO [0]
 CHARCONSTANT [']([a-zA-Z]|[0-9]|[!@#$%^&*()_+{}|:"<>?`~\[\]\\-])[']
 IDENTIFIER [a-zA-Z]+[a-zA-Z0-9|_]*
@@ -74,7 +74,6 @@ SEMICOLON [;]
 {CHARCONSTANT} {return *yytext;}
 {INTEGERS} {return (INTEGER_CONSTANT);}
 
-{SEMICOLON} {return *yytext;}
 {WS}+    {}
 .       { printf(" lexical error in Line : %d \n ", line_num); exit(1); }
 %%

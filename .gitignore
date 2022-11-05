@@ -1,7 +1,9 @@
 a.out
+A3_16.o
 lex.yy.c
 lex.yy.o
 y.output
 y.tab.c
 y.tab.h
 y.tab.o
+master_test.nc
