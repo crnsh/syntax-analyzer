@@ -5,7 +5,7 @@ extern int yyparse(void);
 
 int main() {
     #ifdef YYDEBUG
-        yydebug=1;
+        // yydebug=1; // uncomment for DEBUG
     #endif
     yyparse();
 }
